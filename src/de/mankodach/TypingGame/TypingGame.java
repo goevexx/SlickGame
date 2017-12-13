@@ -1,4 +1,4 @@
-package de.game.halloworld;
+package de.mankodach.TypingGame;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -6,19 +6,19 @@ import java.util.Random;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
 
-public class HalloWorld extends BasicGame {
+public class TypingGame extends BasicGame {
 
 	private Circle circle1;
 	private int treffer;
 	private Input input;
 	private Random random;
 
-	public HalloWorld() {
+	public TypingGame() {
 		super("Basic Slick2D Game!");
 	}
 
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer container = new AppGameContainer(new HalloWorld());
+		AppGameContainer container = new AppGameContainer(new TypingGame());
 		container.setDisplayMode(1280, 720, false);
 		container.start();
 	}
