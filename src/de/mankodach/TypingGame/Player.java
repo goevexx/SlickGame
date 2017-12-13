@@ -31,7 +31,7 @@ public class Player {
 	public void subScore(int score) {
 		this.score -= score;
 	}
-
+	
 	public int getLifepoints() {
 		return lifepoints;
 	}
