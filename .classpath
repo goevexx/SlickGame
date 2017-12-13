@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/slick.jar" sourcepath="libsrc/slick_src.zip"/>
 	<classpathentry kind="lib" path="lib/tinylinepp.jar"/>
 	<classpathentry kind="lib" path="tools/tools.jar"/>
+	<classpathentry kind="lib" path="lib/java-json.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
