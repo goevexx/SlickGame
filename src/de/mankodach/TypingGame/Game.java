@@ -3,8 +3,15 @@ package de.mankodach.TypingGame;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
-public class Game {
+public class Game extends BasicGameState {
+	final int state;
+
 	private Scoreboard score;
 	private Player player;
 	private Enemy activeEnemy;
@@ -12,20 +19,39 @@ public class Game {
 	private Color backgroundColor;
 	private ArrayList<String> words;
 
-	public Game(Scoreboard score, Player player, Enemy activeEnemy,
-			ArrayList<Enemy> enemies, Color backgroundColor,
-			ArrayList<String> words) {
+	public Game(Color backgroundColor, ArrayList<String> words, int state) {
 		super();
 		this.activeEnemy = null;
-		this.score = score;
-		this.player = player;
-		this.enemies = enemies;
 		this.backgroundColor = backgroundColor;
 		this.words = words;
+		this.state = state;
+	}
+
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int getID() {
+		return this.state;
 	}
 
 	public void start() {
-		
+
 	}
 
 	public void end() {
