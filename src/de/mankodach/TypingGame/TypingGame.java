@@ -1,10 +1,6 @@
 package de.mankodach.TypingGame;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class TypingGame extends StateBasedGame{
