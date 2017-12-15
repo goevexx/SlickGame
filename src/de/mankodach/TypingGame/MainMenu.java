@@ -37,6 +37,7 @@ public class MainMenu extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		g.drawString("Typing Game",  container.getWidth() / 2 - 50, container.getHeight() / 2 - 150);
 		gameButton.draw(g);
 		settingsButton.draw(g);
 		endButton.draw(g);
