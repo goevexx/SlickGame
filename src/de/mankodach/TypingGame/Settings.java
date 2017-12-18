@@ -27,7 +27,7 @@ public class Settings {
 		words.add(new Word("AnderesWort"));
 	}
 
-	public void SaveToFile() {
+	public void saveToFile() {
 		try {
 
 			JSONObject root = new JSONObject();

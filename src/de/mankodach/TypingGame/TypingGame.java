@@ -1,17 +1,11 @@
 package de.mankodach.TypingGame;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class TypingGame extends StateBasedGame{
 	public static final String gamename = "Crazy typing Game!";
-	public static final int mainMenuState = 0;
-	public static final int gameState = 1;
-	public static final int settingsState = 2;
+	public enum States { mainMenuState, gameState, settingsState }
 	
 	public MainMenu mainMenu;
 //	public Game game;
@@ -19,7 +13,7 @@ public class TypingGame extends StateBasedGame{
 
 	public TypingGame() {
 		super(gamename);
-		mainMenu = new MainMenu(mainMenuState);
+		mainMenu = new MainMenu(States.mainMenuState.ordinal());
 //		game = new Game();
 //		settings = new Settings();
 		
@@ -41,7 +35,7 @@ public class TypingGame extends StateBasedGame{
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
-		this.getState(mainMenuState).init(container, this);
-		this.enterState(mainMenuState);
+		this.getState(States.mainMenuState.ordinal()).init(container, this);
+		this.enterState(States.mainMenuState.ordinal());
 	}
 }
