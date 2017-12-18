@@ -11,14 +11,14 @@ import java.util.Scanner;
 
 public class Scoreboard {
 
+	private ArrayList<Score> scores;
+	
 	public Scoreboard() {
 	//public Scoreboard(String scoreBoardUrl) {
 		super();
 		//this.loadFromFile(scoreBoardUrl);
 		this.scores = new ArrayList<Score>();
 	}
-
-	private ArrayList<Score> scores;
 
 	public void add(int score, String name) {
 		Score newScore = new Score(score,name);

@@ -4,9 +4,9 @@ import org.newdawn.slick.Color;
 
 public class Player {
 
-	Color color;
-	int score;
-	int lifepoints;
+	private Color color;
+	private int score;
+	private int lifepoints;
 
 	public Color getColor() {
 		return color;
