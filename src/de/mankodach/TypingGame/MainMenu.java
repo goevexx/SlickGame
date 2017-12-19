@@ -10,12 +10,12 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.mankodach.TypingGame.TypingGame.States;
 
 public class MainMenu extends BasicGameState {
+	private final int state;
+
 	private Button gameButton;
 	private Button settingsButton;
 	private Button endButton;
 	private Input input;
-
-	private final int state;
 
 	public MainMenu(int state) {
 		this.state = state;
@@ -37,7 +37,7 @@ public class MainMenu extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		g.drawString("Typing Game",  container.getWidth() / 2 - 50, container.getHeight() / 2 - 150);
+		g.drawString("Typing Game", container.getWidth() / 2 - 50, container.getHeight() / 2 - 150);
 		gameButton.draw(g);
 		settingsButton.draw(g);
 		endButton.draw(g);
@@ -51,13 +51,9 @@ public class MainMenu extends BasicGameState {
 		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
 			if (gameButton.contains(mouseX, mouseY)) {
 				game.enterState(States.gameState.ordinal());
-			}
-		} else if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-			if (settingsButton.contains(mouseX, mouseY)) {
+			} else if (settingsButton.contains(mouseX, mouseY)) {
 				game.enterState(States.settingsState.ordinal());
-			}
-		} else if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-			if (endButton.contains(mouseX, mouseY)) {
+			} else if (endButton.contains(mouseX, mouseY)) {
 				container.exit();
 			}
 		} else if (input.isKeyPressed(Input.KEY_ESCAPE)) {

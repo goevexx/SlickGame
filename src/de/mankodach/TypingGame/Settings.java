@@ -9,15 +9,23 @@ import org.json.*;
 import org.apache.commons.io.FileUtils;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
-public class Settings {
+public class Settings extends BasicGameState {
+	private final int state;
+
 	private ArrayList<Word> words;
 	private Color gameColor;
 	private Color enemyColor;
 	private Color shotColor;
 	private String jsonFileName = "typingGame.json";
 
-	public Settings() {
+	public Settings(int state) {
+		this.state = state;
 		this.gameColor = Color.black;
 		this.enemyColor = Color.white;
 		this.shotColor = Color.cyan;
@@ -25,6 +33,28 @@ public class Settings {
 		words = new ArrayList<Word>();
 		words.add(new Word("Wort"));
 		words.add(new Word("AnderesWort"));
+		
+		if (!loadFromFile()) {
+			saveToFile();
+		}
+	}
+
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		// TODO Auto-generated method stub
+
 	}
 
 	public void saveToFile() {
@@ -51,19 +81,18 @@ public class Settings {
 			root.put("shotColor", shotColor);
 
 			JSONArray words = new JSONArray();
-			
-			for (Word word : this.words)
-			{
+
+			for (Word word : this.words) {
 				JSONObject obj = new JSONObject();
 				obj.put("name", word.getName());
 				words.put(obj);
 			}
-			
+
 			root.put("words", words);
 
 			String jsonString = root.toString();
 
-			FileWriter fileWriter = new FileWriter(System.getProperty("user.home")+ "\\" + jsonFileName);
+			FileWriter fileWriter = new FileWriter(System.getProperty("user.home") + "\\" + jsonFileName);
 			fileWriter.write(jsonString);
 			fileWriter.flush();
 			fileWriter.close();
@@ -75,40 +104,43 @@ public class Settings {
 		}
 	}
 
-	public void loadFromFile() {
+	public boolean loadFromFile() {
 		
-		File file = new File(System.getProperty("user.home")+ "\\" + jsonFileName);
+		File file = new File(System.getProperty("user.home") + "\\" + jsonFileName);
 		String content;
-		try {
-			content = FileUtils.readFileToString(file, "utf-8");
+		if (file.exists() && !file.isDirectory()) {
+			try {
+				content = FileUtils.readFileToString(file, "utf-8");
 
-			JSONObject root = new JSONObject(content);
+				JSONObject root = new JSONObject(content);
 
-			JSONArray gameColorInts = root.getJSONArray("gameColor");
-			this.gameColor = new Color(gameColorInts.getInt(0), gameColorInts.getInt(1), gameColorInts.getInt(2));
+				JSONArray gameColorInts = root.getJSONArray("gameColor");
+				this.gameColor = new Color(gameColorInts.getInt(0), gameColorInts.getInt(1), gameColorInts.getInt(2));
 
-			JSONArray enemyColorInts = root.getJSONArray("enemyColor");
-			this.enemyColor = new Color(enemyColorInts.getInt(0), enemyColorInts.getInt(1), enemyColorInts.getInt(2));
+				JSONArray enemyColorInts = root.getJSONArray("enemyColor");
+				this.enemyColor = new Color(enemyColorInts.getInt(0), enemyColorInts.getInt(1),
+						enemyColorInts.getInt(2));
 
-			JSONArray shotColorInts = root.getJSONArray("shotColor");
-			this.shotColor = new Color(shotColorInts.getInt(0), shotColorInts.getInt(1), shotColorInts.getInt(2));
+				JSONArray shotColorInts = root.getJSONArray("shotColor");
+				this.shotColor = new Color(shotColorInts.getInt(0), shotColorInts.getInt(1), shotColorInts.getInt(2));
 
-			JSONArray wordStrings = root.getJSONArray("words");
-			
-			words.clear();
+				JSONArray wordStrings = root.getJSONArray("words");
 
-			for (int i = 0; i < wordStrings.length(); i++)
-			{
-				JSONObject object = (JSONObject) wordStrings.get(i);
-				String word = object.getString("name");
-				words.add(new Word(word));
+				words.clear();
+
+				for (int i = 0; i < wordStrings.length(); i++) {
+					JSONObject object = (JSONObject) wordStrings.get(i);
+					String word = object.getString("name");
+					words.add(new Word(word));
+				}
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
+		return false;
 	}
 
 	public ArrayList<Word> getWords() {
@@ -141,5 +173,10 @@ public class Settings {
 
 	public void setWords(ArrayList<Word> words) {
 		this.words = words;
+	}
+
+	@Override
+	public int getID() {
+		return this.state;
 	}
 }
