@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 //import org.json.*;
 
 public class Scoreboard {
@@ -30,18 +33,28 @@ public class Scoreboard {
 	}
 	
 	public void loadFromFile(){
-		//TODO
 		try {
 			String content = new String(Files.readAllBytes(Paths.get("Scoreboard.txt")));
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			
+			JSONObject root = new JSONObject(content);
+			
+			JSONArray scores = root.getJSONArray("scores");
+			
+			this.scores.clear();
+			this.scores = this.convertStringToArrayList(scores);
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public void saveToFile(){
+		
+		
 		String jsonString = this.convertArrayListToString(this.scores);
 
-		
 		try {
 			File file = new File("Scoreboard.txt");
 			FileWriter fileWriter = new FileWriter(file);
@@ -54,12 +67,45 @@ public class Scoreboard {
 	}
 	
 	private String convertArrayListToString(ArrayList<Score> scoresList){
+		try 
+		{	
+			JSONObject root = new JSONObject();
 		
-		return "TODO";
+			JSONArray scores = new JSONArray();
+		
+			for(int i = 0;i <this.scores.size(); i++)
+			{
+				Score aktScore = this.scores.get(i);
+				JSONObject newScore = new JSONObject();
+				newScore.put("score", aktScore.getScore());
+				newScore.put("name", aktScore.getName());
+				scores.put(newScore);
+			}
+			root.put("scores",scores);
+		
+			return root.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
-	private ArrayList<Score> convertStringToArrayList(String scoreString){
-		return new ArrayList<Score>();
+	private ArrayList<Score> convertStringToArrayList(JSONArray scoreJSONArray){
+		ArrayList<Score> scores =new ArrayList<Score>();
+		
+		try {
+			for (int i = 0; i < scoreJSONArray.length(); i++) {
+				JSONObject newScoreJSONObject = (JSONObject) scoreJSONArray.get(i);
+				int scorescore = (Integer) newScoreJSONObject.get("score");
+				String scorename = newScoreJSONObject.get("name").toString();
+				Score newScore = new Score(scorescore,scorename);
+				scores.add(newScore);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return scores;
 	}
 	
 }
