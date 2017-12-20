@@ -29,6 +29,10 @@ public class Game extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		container.setMinimumLogicUpdateInterval(5);
+		container.setMaximumLogicUpdateInterval(5);
+		
+		
 	}
 
 	@Override
@@ -39,7 +43,42 @@ public class Game extends BasicGameState {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-
+		
+		
+	}
+	
+	@Override 
+	public void keyPressed(int key, char c)
+	{
+		Word activeWord = activeEnemy.getWord();
+		if (c > 64 && c < 91 )
+		{
+			if (activeEnemy == null)
+			{
+				ArrayList<Enemy> possibleEnemies = new ArrayList<Enemy>();
+				for(Enemy enemy : enemies)
+				{
+					Word word = enemy.getWord();
+					if (word.getName().charAt(0) == c)
+					{
+						 possibleEnemies.add(enemy);
+						 
+						 for (Enemy possibleEnemy : possibleEnemies)
+						 {
+							 
+						 }
+					}
+				}
+			}
+			activeWord.addTypedLetter(c);
+			
+			if (activeWord.getName() == activeWord.getTyped())
+			{
+				destroyEnemy(activeEnemy);
+				activeEnemy = null;
+				//animation einfügen
+			}
+		}	
 	}
 
 	@Override
@@ -48,7 +87,7 @@ public class Game extends BasicGameState {
 	}
 
 	public void start() {
-
+		
 	}
 
 	public void end() {
@@ -56,6 +95,7 @@ public class Game extends BasicGameState {
 	}
 
 	public void pause() {
+		
 
 	}
 

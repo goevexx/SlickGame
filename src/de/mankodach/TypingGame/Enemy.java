@@ -7,13 +7,12 @@ import org.newdawn.slick.geom.Shape;
 
 public class Enemy {
 	private Color color;
-	private String word;
-	
+	private Word word;
 	public Rectangle rec;
 	private int width;
 	private int height;
 
-	public Enemy(Color color, String word) {
+	public Enemy(Color color, Word word) {
 		super();
 		this.color = color;
 		this.word = word;
@@ -32,5 +31,13 @@ public class Enemy {
 
 	public void setWidth(int width) {
 		this.width = width;
+	}
+	
+	public Word getWord() {
+		return word;
+	}
+
+	public void setWord(Word word) {
+		this.word = word;
 	}
 }
