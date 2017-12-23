@@ -1,7 +1,5 @@
 package de.mankodach.TypingGame;
 
-import java.util.ArrayList;
-
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -20,7 +18,7 @@ public class TypingGame extends StateBasedGame {
 		super(gamename);
 		mainMenu = new MainMenu(States.mainMenuState.ordinal());
 		settings = new Settings(States.settingsState.ordinal());
-		game = new Game(Color.red, new ArrayList<String>(), States.gameState.ordinal());
+		game = new Game(this.settings, States.gameState.ordinal());
 	}
 
 	public static void main(String[] args) throws SlickException {

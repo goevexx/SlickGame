@@ -9,36 +9,27 @@ public class Enemy {
 	private Word word;
 	private int width;
 	private int height;
-	private int x;
-	private int y;
+	private Graphics g;
 	public Rectangle rec;
 
-	public Enemy(int x, int y, Color color, Word word) {
+	public Enemy(Graphics g, int x, int y, Color color, String word) {
 		super();
 		this.color = color;
-		this.word = word;
-		this.x = x;
-		this.y = y;
+		this.g = g;
+		this.word = new Word(g, word);
+		this.width = this.word.getWidth() + 5;
+		this.height = g.getFont().getHeight(this.word.getName()) + 5;
+		this.rec = new Rectangle(x, y, this.width, this.height);
 	}
 
-	public void draw(Graphics g, int x, int y) {
+	public void draw(float x, float y) {
 		Color gColor = g.getColor();
-		g.setColor(Color.white);
+		g.setColor(color);
+		rec.setX(x);
+		rec.setY(y);
 		g.fill(this.rec);
-		g.setColor(Color.black);
-		if (this.rec == null) {
-			this.width = g.getFont().getWidth(this.word.getName()) + 10;
-			this.height = g.getFont().getHeight(this.word.getName()) + 10;
-			this.rec = new Rectangle(x, y, this.width, this.height);
-		} else {
-			rec.setX(x);
-			rec.setY(y);
-		}
-		this.word.draw(g,
-				this.x + width / 2 - g.getFont().getWidth(this.word.getName())
-						/ 2,
-				this.y + height / 2
-						- g.getFont().getHeight(this.word.getName()) / 2);
+		g.setColor(Color.red);
+		word.draw(x + width / 2 - word.getWidth() / 2, y + height / 2 - g.getFont().getHeight(this.word.getName()) / 2);
 		g.setColor(gColor);
 	}
 
@@ -58,19 +49,19 @@ public class Enemy {
 		this.word = word;
 	}
 
-	public int getX() {
-		return x;
+	public float getX() {
+		return rec.getX();
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setX(float x) {
+		this.rec.setX(x);
 	}
 
-	public int getY() {
-		return y;
+	public float getY() {
+		return this.rec.getY();
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public void setY(float f) {
+		this.rec.setY(f);
 	}
 }

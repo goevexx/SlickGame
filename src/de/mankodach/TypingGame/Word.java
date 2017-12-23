@@ -6,25 +6,35 @@ import org.newdawn.slick.Graphics;
 public class Word {
 	private String name;
 	private String typed;
+	private Graphics g;
+	private int width;
 
-	public Word(String name) {
+	public Word(Graphics g, String name) {
 		this.name = name;
-		typed = null;
+		typed = "";
+		this.g = g;
+		width = 0;
+		for (int i = 0; i < this.name.length(); i++) {
+			String drawChar = Character.toString(this.name.charAt(i));
+			width += g.getFont().getWidth(drawChar);
+		}
 	}
 
-	public void draw(Graphics g, int x, int y) {
-		Color lColor = g.getColor();
-		int lastStrinLength = 0;
+	public void draw(float f, float g2) {
+		int stringLength = 0;
 		for (int i = 0; i < this.name.length(); i++) {
-			g.setColor(Color.white);
+			g.setColor(g.getColor());
 			if (typed.length() >= i + 1)
 				if (name.charAt(i) == typed.charAt(i))
 					g.setColor(Color.green);
 			String drawChar = Character.toString(this.name.charAt(i));
-			g.drawString(drawChar, x + lastStrinLength, y);
-			lastStrinLength = g.getFont().getWidth(drawChar) + 2;
+			g.drawString(drawChar, f + stringLength, g2);
+			stringLength += g.getFont().getWidth(drawChar);
 		}
-		g.setColor(lColor);
+	}
+
+	public int getWidth() {
+		return this.width;
 	}
 
 	public String getName() {
