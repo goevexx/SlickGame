@@ -12,11 +12,11 @@ public class Enemy {
 	private Graphics g;
 	public Rectangle rec;
 
-	public Enemy(Graphics g, int x, int y, Color color, String word) {
+	public Enemy(Graphics g, int x, int y, Color color, String word, int wordWidth) {
 		super();
 		this.color = color;
 		this.g = g;
-		this.word = new Word(g, word);
+		this.word = new Word(g, word, wordWidth);
 		this.width = this.word.getWidth() + 5;
 		this.height = g.getFont().getHeight(this.word.getName()) + 5;
 		this.rec = new Rectangle(x, y, this.width, this.height);

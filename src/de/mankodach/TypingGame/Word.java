@@ -9,15 +9,11 @@ public class Word {
 	private Graphics g;
 	private int width;
 
-	public Word(Graphics g, String name) {
+	public Word(Graphics g, String name, int width) {
 		this.name = name;
 		typed = "";
 		this.g = g;
-		width = 0;
-		for (int i = 0; i < this.name.length(); i++) {
-			String drawChar = Character.toString(this.name.charAt(i));
-			width += g.getFont().getWidth(drawChar);
-		}
+		this.width = width;
 	}
 
 	public void draw(float f, float g2) {
