@@ -6,7 +6,7 @@ import org.newdawn.slick.geom.Circle;
 
 public class Player {
 	private Color color;
-	private int score;
+	private Score score;
 	private int lifepoints;
 	private int x;
 	private int y;
@@ -17,7 +17,7 @@ public class Player {
 		this.x = x;
 		this.y = y;
 		this.color = color;
-		this.score = 0;
+		this.score = new Score(0, "Score: ");
 		this.lifepoints = 3;
 		this.circ = new Circle(x, y, 50);
 	}
@@ -57,20 +57,12 @@ public class Player {
 		this.color = color;
 	}
 
-	public int getScore() {
+	public Score getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(Score score) {
 		this.score = score;
-	}
-
-	public void addScore(int score) {
-		this.score += score;
-	}
-
-	public void subScore(int score) {
-		this.score -= score;
 	}
 
 	public int getLifepoints() {

@@ -1,5 +1,7 @@
 package de.mankodach.TypingGame;
 
+import org.newdawn.slick.Graphics;
+
 public class Score {
 	
 	private int score;
@@ -10,6 +12,10 @@ public class Score {
 		this.score = score;
 		this.name = name;
 	}
+	
+	public void draw(Graphics g, float x, float y) {
+		g.drawString(this.name + this.score, x, y);
+	}
 
 	public int getScore() {
 		return score;
@@ -17,5 +23,13 @@ public class Score {
 
 	public String getName() {
 		return name;
+	}
+
+	public void addScore(int score) {
+		this.score += score;
+	}
+
+	public void subScore(int score) {
+		this.score -= score;
 	}
 }

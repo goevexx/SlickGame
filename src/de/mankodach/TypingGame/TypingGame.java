@@ -50,42 +50,51 @@ public class TypingGame extends BasicGame {
 		this.container = container;
 		timestamp_spawn = new Date();
 		timestamp_move = new Date();
-		player = new Player(container.getWidth() / 2 - 25, container.getHeight(), Color.white);
+		player = new Player(container.getWidth() / 2, container.getHeight(), Color.white);
 		enemies.add(spawnEnemey(container));
 	}
 
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		player.draw(g);
+		player.getScore().draw(g, container.getWidth()
+				- g.getFont().getWidth(player.getScore().getName() + player.getScore().getScore()) - 5, 5);
 		g.drawString("Lifepoints: " + player.getLifepoints(),
 				container.getWidth() - g.getFont().getWidth("Lifepoints: " + player.getLifepoints()) - 5,
 				container.getHeight() - g.getFont().getHeight("Lifepoints: " + player.getLifepoints()) - 5);
-		int incHeight = 0;
-		if ((new Date().getTime() - timestamp_move.getTime()) > 100) {
-			incHeight = 1;
-			timestamp_move = new Date();
-		}
-		for (int i = 0; i < enemies.size();i++) {
-			Enemy enemy = enemies.get(i);
-			enemy.draw(enemy.getX(), enemy.getY() + incHeight);
-			if(enemy.getY() > container.getHeight()) {
-				player.subLifepoints(1);
-				destroyEnemy(enemy);
+		if (!container.isPaused()) {
+			int incHeight = 0;
+			if ((new Date().getTime() - timestamp_move.getTime()) > 100) {
+				incHeight = 1;
+				timestamp_move = new Date();
 			}
+			for (int i = 0; i < enemies.size(); i++) {
+				Enemy enemy = enemies.get(i);
+				enemy.draw(enemy.getX(), enemy.getY() + incHeight);
+				if (enemy.getY() > container.getHeight()) {
+					player.subLifepoints(1);
+					destroyEnemy(enemy);
+				}
+			}
+		} else {
+			g.drawString("Loose", container.getWidth() / 2 - g.getFont().getWidth("Loose") / 2,
+					container.getHeight() / 2 - g.getFont().getWidth("Loose") / 2);
 		}
 	}
 
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		if (player.getLifepoints() == 0) {
-			container.pause(); //klappt nicht
+			container.setPaused(true);
 		}
-		if ((new Date().getTime() - timestamp_spawn.getTime()) > 2000) {
-			enemies.add(spawnEnemey(container));
-			timestamp_spawn = new Date();
+		if (!container.isPaused()) {
+			if ((new Date().getTime() - timestamp_spawn.getTime()) > 2000) {
+				enemies.add(spawnEnemey(container));
+				timestamp_spawn = new Date();
+			}
 		}
 	}
-	
+
 	@Override
 	public void keyPressed(int key, char c) {
 		Word activeWord = activeEnemy.getWord();
@@ -116,15 +125,15 @@ public class TypingGame extends BasicGame {
 	public void destroyEnemy(Enemy e) {
 		enemies.remove(e);
 	}
-	
-	public Enemy spawnEnemey(GameContainer container){
-		String enemyWord= settings.getWords().get(random.nextInt(settings.getWords().size()));
-		return new Enemy(container.getGraphics(), random.nextInt(container.getWidth()-calWordWidth(enemyWord)), 0,
+
+	public Enemy spawnEnemey(GameContainer container) {
+		String enemyWord = settings.getWords().get(random.nextInt(settings.getWords().size()));
+		return new Enemy(container.getGraphics(), random.nextInt(container.getWidth() - calWordWidth(enemyWord)), 0,
 				settings.getEnemyColor(), enemyWord, calWordWidth(enemyWord));
 	}
-	
+
 	public int calWordWidth(String name) {
-		int width=0;
+		int width = 0;
 		for (int i = 0; i < name.length(); i++) {
 			String drawChar = Character.toString(name.charAt(i));
 			width += this.container.getGraphics().getFont().getWidth(drawChar);
