@@ -9,9 +9,11 @@ import org.newdawn.slick.*;
 public class TypingGame extends BasicGame {
 	public static final String gamename = "Crazy typing Game!";
 	private GameContainer container;
+	private Sound backgroundSound;
 	private Scoreboard scoreboard;
 	private Player player;
 	private Enemy activeEnemy;
+	private Enemy enemyToKill;
 	private ArrayList<Enemy> enemies;
 	private ArrayList<String> words;
 	private Date timestamp_spawn;
@@ -51,7 +53,10 @@ public class TypingGame extends BasicGame {
 		timestamp_spawn = new Date();
 		timestamp_move = new Date();
 		player = new Player(container.getWidth() / 2, container.getHeight(), Color.white);
-		enemies.add(spawnEnemey(container));
+		spawnEnemey();
+		enemyToKill = null;
+		backgroundSound = new Sound("res/backgroundSound1.ogg");
+		backgroundSound.loop();
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class TypingGame extends BasicGame {
 				container.getHeight() - g.getFont().getHeight("Lifepoints: " + player.getLifepoints()) - 5);
 		if (!container.isPaused()) {
 			int incHeight = 0;
-			if ((new Date().getTime() - timestamp_move.getTime()) > 100) {
+			if ((new Date().getTime() - timestamp_move.getTime()) > 50) {
 				incHeight = 1;
 				timestamp_move = new Date();
 			}
@@ -72,8 +77,7 @@ public class TypingGame extends BasicGame {
 				Enemy enemy = enemies.get(i);
 				enemy.draw(enemy.getX(), enemy.getY() + incHeight);
 				if (enemy.getY() > container.getHeight()) {
-					player.subLifepoints(1);
-					destroyEnemy(enemy);
+					enemyToKill = enemy;
 				}
 			}
 		} else {
@@ -88,8 +92,12 @@ public class TypingGame extends BasicGame {
 			container.setPaused(true);
 		}
 		if (!container.isPaused()) {
-			if ((new Date().getTime() - timestamp_spawn.getTime()) > 2000) {
-				enemies.add(spawnEnemey(container));
+			if (enemyToKill != null) {
+				player.subLifepoints(1);
+				destroyEnemy(enemyToKill);
+			}
+			if ((new Date().getTime() - timestamp_spawn.getTime()) > 5000) {
+				spawnEnemey();
 				timestamp_spawn = new Date();
 			}
 		}
@@ -97,39 +105,53 @@ public class TypingGame extends BasicGame {
 
 	@Override
 	public void keyPressed(int key, char c) {
-		Word activeWord = activeEnemy.getWord();
-		if (c > 64 && c < 91) {
-			if (activeEnemy == null) {
-				ArrayList<Enemy> possibleEnemies = new ArrayList<Enemy>();
-				for (Enemy enemy : enemies) {
-					Word word = enemy.getWord();
-					if (word.getName().charAt(0) == c) {
-						possibleEnemies.add(enemy);
-
-						for (Enemy possibleEnemy : possibleEnemies) {
-
-						}
-					}
+		// if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
+		if (activeEnemy == null) {
+			ArrayList<Enemy> candidates = new ArrayList<Enemy>();
+			for (Enemy enemy : enemies) {
+				Word word = enemy.getWord();
+				if (word.getName().charAt(0) == c) {
+					candidates.add(enemy);
 				}
 			}
-			activeWord.addTypedLetter(c);
-
-			if (activeWord.getName() == activeWord.getTyped()) {
+			if (candidates.size() > 0) {
+				activeEnemy = candidates.get(0);
+				for (Enemy candidate : candidates) {
+					if (candidate.getY() > activeEnemy.getY())
+						activeEnemy = candidate;
+				}
+			}
+		}
+		if (activeEnemy != null) {
+			Word activeWord = activeEnemy.getWord();
+			if (activeWord.getName().length() > activeWord.getTyped().length()) {
+				if (activeWord.getName().charAt(activeWord.getTyped().length()) == c) {
+					activeWord.addTypedLetter(c);
+				}
+			}
+			if (activeWord.getName().equals(activeWord.getTyped())) {
+				int scoreAdd = ((int) (activeWord.getName().length() / 5) > 1)
+						? (int) (activeWord.getName().length() / 5)
+						: 1;
+				player.getScore().addScore(scoreAdd);
 				destroyEnemy(activeEnemy);
 				activeEnemy = null;
 				// animation einfügen
 			}
 		}
+		// }
 	}
 
 	public void destroyEnemy(Enemy e) {
+		if (activeEnemy == e)
+			activeEnemy = null;
 		enemies.remove(e);
 	}
 
-	public Enemy spawnEnemey(GameContainer container) {
-		String enemyWord = settings.getWords().get(random.nextInt(settings.getWords().size()));
-		return new Enemy(container.getGraphics(), random.nextInt(container.getWidth() - calWordWidth(enemyWord)), 0,
-				settings.getEnemyColor(), enemyWord, calWordWidth(enemyWord));
+	public void spawnEnemey() {
+		String enemyWord = words.get(random.nextInt(settings.getWords().size()));
+		enemies.add(new Enemy(container.getGraphics(), random.nextInt(container.getWidth() - calWordWidth(enemyWord)), 0,
+				settings.getEnemyColor(), enemyWord, calWordWidth(enemyWord), calWordHeight(enemyWord)));
 	}
 
 	public int calWordWidth(String name) {
@@ -139,5 +161,16 @@ public class TypingGame extends BasicGame {
 			width += this.container.getGraphics().getFont().getWidth(drawChar);
 		}
 		return width;
+	}
+
+	public int calWordHeight(String name) {
+		int maxStrHeight = 0;
+		for (int i = 0; i < name.length(); i++) {
+			int currentStrHeight = container.getGraphics().getFont().getHeight(name.substring(i, i + 1));
+			if (currentStrHeight > maxStrHeight) {
+				maxStrHeight = currentStrHeight;
+			}
+		}
+		return maxStrHeight;
 	}
 }

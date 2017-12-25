@@ -12,13 +12,13 @@ public class Enemy {
 	private Graphics g;
 	public Rectangle rec;
 
-	public Enemy(Graphics g, int x, int y, Color color, String word, int wordWidth) {
+	public Enemy(Graphics g, int x, int y, Color color, String word, int wordWidth, int wordHeight) {
 		super();
 		this.color = color;
 		this.g = g;
-		this.word = new Word(g, word, wordWidth);
+		this.word = new Word(g, word, wordWidth, wordHeight);
 		this.width = this.word.getWidth() + 5;
-		this.height = g.getFont().getHeight(this.word.getName()) + 5;
+		this.height = this.word.getHeight() + 5;
 		this.rec = new Rectangle(x, y, this.width, this.height);
 	}
 
@@ -29,7 +29,7 @@ public class Enemy {
 		rec.setY(y);
 		g.fill(this.rec);
 		g.setColor(Color.red);
-		word.draw(x + width / 2 - word.getWidth() / 2, y + height / 2 - g.getFont().getHeight(this.word.getName()) / 2);
+		word.draw(x + width / 2 - word.getWidth() / 2, y);
 		g.setColor(gColor);
 	}
 
