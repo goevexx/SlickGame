@@ -48,6 +48,10 @@ public class Word {
 		return typed;
 	}
 
+	public void setTyped(String typed) {
+		this.typed = typed;
+	}
+
 	public void addTypedLetter(char letter) {
 		typed += letter;
 	}
