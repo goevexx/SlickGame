@@ -8,8 +8,9 @@ public class Player {
 	private Color color;
 	private Score score;
 	private int lifepoints;
-	private int x;
-	private int y;
+	private float x;
+	private float y;
+	private Shoot shot;
 	public Circle circ;
 
 	public Player(int x, int y, Color color) {
@@ -20,6 +21,7 @@ public class Player {
 		this.score = new Score(0, "Score: ");
 		this.lifepoints = 3;
 		this.circ = new Circle(x, y, 50);
+		this.shot = null;
 	}
 
 	public void draw(Graphics g) {
@@ -28,24 +30,20 @@ public class Player {
 		g.fill(this.circ);
 		g.setColor(gColor);
 	}
-	
-	public void kill(){
-		
-	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
@@ -80,4 +78,13 @@ public class Player {
 	public void subLifepoints(int lifepoints) {
 		this.lifepoints -= lifepoints;
 	}
+
+	public Shoot getShot() {
+		return shot;
+	}
+
+	public void setShot(Shoot shot) {
+		this.shot = shot;
+	}
+
 }
