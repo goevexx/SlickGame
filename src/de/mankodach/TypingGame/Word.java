@@ -55,4 +55,24 @@ public class Word {
 	public void addTypedLetter(char letter) {
 		typed += letter;
 	}
+
+	public static int calWidth(Graphics g, String name) {
+		int width = 0;
+		for (int i = 0; i < name.length(); i++) {
+			String drawChar = Character.toString(name.charAt(i));
+			width += g.getFont().getWidth(drawChar);
+		}
+		return width;
+	}
+
+	public static int calHeight(Graphics g, String name) {
+		int maxStrHeight = 0;
+		for (int i = 0; i < name.length(); i++) {
+			int currentStrHeight = g.getFont().getHeight(name.substring(i, i + 1));
+			if (currentStrHeight > maxStrHeight) {
+				maxStrHeight = currentStrHeight;
+			}
+		}
+		return maxStrHeight;
+	}
 }
