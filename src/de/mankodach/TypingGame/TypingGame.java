@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.Random;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 
 public class TypingGame extends BasicGame {
 	private GameContainer container;
@@ -25,6 +28,8 @@ public class TypingGame extends BasicGame {
 	private Date timestamp_shoot;
 	private Random random;
 	private int currentDifficulty;
+	private ParticleSystem particleSystem;
+	private ConfigurableEmitter explosion;
 	private final float[] difficulties = { 1, 0.75f, 0.675f, 0.6f };
 
 	public static final String gamename = "Crazy typing Game!";
@@ -69,10 +74,24 @@ public class TypingGame extends BasicGame {
 		player = new Player(container.getWidth() / 2, container.getHeight(), Color.white);
 		spawnEnemey();
 		passedEnemy = null;
+
+		try {
+			particleSystem = ParticleIO.loadConfiguredSystem("res/explosion.xml");
+			particleSystem.getEmitter(0).setEnabled(false);
+			particleSystem.setRemoveCompletedEmitters(true);
+
+			explosion = (ConfigurableEmitter) particleSystem.getEmitter(0);
+			explosion.setEnabled(false);
+		} catch (Exception e) {
+			System.out.println("Error adding explosion\nCheck for explosion.xml");
+			System.exit(0);
+		}
+
 	}
 
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
+		particleSystem.render();
 		player.draw(g);
 		player.getScore().draw(g, container.getWidth()
 				- g.getFont().getWidth(player.getScore().getName() + player.getScore().getScore()) - 5, 5);
@@ -108,6 +127,7 @@ public class TypingGame extends BasicGame {
 
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
+		particleSystem.update(delta);
 		if (container.isPaused()) {
 			backgroundSound0.stop();
 			backgroundSound1.stop();
@@ -186,8 +206,11 @@ public class TypingGame extends BasicGame {
 							? (int) (activeWord.getName().length() / 4)
 							: 1;
 					player.getScore().addScore(scoreAdd);
-					destroyEnemy(activeEnemy);
 
+					float x = activeEnemy.getX();
+					float y = activeEnemy.getY();
+					destroyEnemy(activeEnemy);
+					addExplosion(x, y);
 				}
 			} else {
 				missSound.play(1, 0.1f);
@@ -207,5 +230,12 @@ public class TypingGame extends BasicGame {
 				random.nextInt(container.getWidth() - Word.calWidth(this.container.getGraphics(), enemyWord)), 0,
 				settings.getEnemyColor(), enemyWord, Word.calWidth(this.container.getGraphics(), enemyWord),
 				Word.calHeight(this.container.getGraphics(), enemyWord)));
+	}
+
+	public void addExplosion(float x, float y) {
+		ConfigurableEmitter e = explosion.duplicate();
+		e.setEnabled(true);
+		e.setPosition(x, y);
+		particleSystem.addEmitter(e);
 	}
 }
