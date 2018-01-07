@@ -17,6 +17,7 @@ public class TypingGame extends BasicGame {
 	private Sound backgroundSound3;
 	private Sound endSound;
 	private Sound missSound;
+	private Sound destroySound;
 	private Scoreboard scoreboard;
 	private Player player;
 	private Enemy activeEnemy;
@@ -68,6 +69,7 @@ public class TypingGame extends BasicGame {
 		backgroundSound3 = new Sound("res/backgroundSound3.ogg");
 		endSound = new Sound("res/ending.wav");
 		missSound = new Sound("res/miss.wav");
+		destroySound = new Sound("res/destroyEnemy.wav");
 		backgroundSound0.loop(1, 0.25f);
 		timestamp_spawn = new Date();
 		timestamp_move = new Date();
@@ -207,9 +209,10 @@ public class TypingGame extends BasicGame {
 							: 1;
 					player.getScore().addScore(scoreAdd);
 
-					float x = activeEnemy.getX();
-					float y = activeEnemy.getY();
+					float x = activeEnemy.getX() + activeEnemy.getWidth() / 2;
+					float y = activeEnemy.getY() + activeEnemy.getHeight() / 2;
 					destroyEnemy(activeEnemy);
+					destroySound.play();
 					addExplosion(x, y);
 				}
 			} else {
