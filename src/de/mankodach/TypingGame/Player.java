@@ -6,11 +6,14 @@ import org.newdawn.slick.geom.Circle;
 
 public class Player {
 	private Color color;
-	private Score score;
-	private int lifepoints;
+	private IntAttribute score;
+	private IntAttribute lifepoints;
+	private IntAttribute destroyedEnemies;
+	private IntAttribute missed;
+	private IntAttribute wpm;
 	private float x;
 	private float y;
-	private Shoot shot;
+	private Shot shot;
 	public Circle circ;
 
 	public Player(int x, int y, Color color) {
@@ -18,10 +21,12 @@ public class Player {
 		this.x = x;
 		this.y = y;
 		this.color = color;
-		this.score = new Score(0, "Score: ");
-		this.lifepoints = 3;
+		this.score = new IntAttribute("Score", 0);
+		this.lifepoints = new IntAttribute("Lifepoints", 1);
 		this.circ = new Circle(x, y, 50);
 		this.shot = null;
+		this.missed = new IntAttribute("Missed", 0);
+		this.destroyedEnemies = new IntAttribute("Words", 0);
 	}
 
 	public void draw(Graphics g) {
@@ -55,36 +60,69 @@ public class Player {
 		this.color = color;
 	}
 
-	public Score getScore() {
+	public IntAttribute getScore() {
 		return score;
 	}
 
-	public void setScore(Score score) {
+	public void setScore(IntAttribute score) {
 		this.score = score;
 	}
 
-	public int getLifepoints() {
+	public IntAttribute getLifepoints() {
 		return lifepoints;
 	}
 
-	public void setLifepoints(int lifepoints) {
+	public void setLifepoints(IntAttribute lifepoints) {
 		this.lifepoints = lifepoints;
 	}
 
 	public void addLifepoints(int lifepoints) {
-		this.lifepoints += lifepoints;
+		this.lifepoints.setInt(this.lifepoints.getInt() + lifepoints);
 	}
 
 	public void subLifepoints(int lifepoints) {
-		this.lifepoints -= lifepoints;
+		this.lifepoints.setInt(this.lifepoints.getInt() - lifepoints);
 	}
 
-	public Shoot getShot() {
+	public Shot getShot() {
 		return shot;
 	}
 
-	public void setShot(Shoot shot) {
+	public void setShot(Shot shot) {
 		this.shot = shot;
 	}
 
+	public IntAttribute getDestroyedWords() {
+		return destroyedEnemies;
+	}
+
+	public void setDestroyedWords(IntAttribute destroyedWords) {
+		this.destroyedEnemies = destroyedWords;
+	}
+
+	public IntAttribute getMissed() {
+		return missed;
+	}
+
+	public void setMissed(IntAttribute missed) {
+		this.missed = missed;
+	}
+	
+	public void incMissed() {
+		missed.setInt(missed.getInt()+1);
+	}
+	
+	public void incDestroyedEnemies() {
+		destroyedEnemies.setInt(destroyedEnemies.getInt()+1);
+	}
+
+	public IntAttribute getWpm() {
+		return wpm;
+	}
+
+	public void setWpm(IntAttribute wpm) {
+		this.wpm = wpm;
+	}
+	
+	
 }
