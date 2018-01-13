@@ -72,7 +72,7 @@ public class TypingGame extends BasicGame {
 				new Level(backgroundSound1, 0.675f, 700), new Level(backgroundSound1, 0.6f, 1500),
 				new Level(backgroundSound2, 0.55f, 3000), new Level(backgroundSound2, 0.5f, 6000),
 				new Level(backgroundSound3, 0.45f, 12000), new Level(backgroundSound3, 0.4f, Integer.MAX_VALUE), };
-		levels[0].getBackgroundSound().loop(1, 0.25f);
+		levels[currentLevel.getInt()].getBackgroundSound().loop(1, 0.25f);
 		endSound = new Sound("res/ending.wav");
 		missSound = new Sound("res/miss.wav");
 		destroyEnemySound = new Sound("res/destroyEnemy.wav");
@@ -82,8 +82,8 @@ public class TypingGame extends BasicGame {
 		timestamps_wpm = new ArrayList<Date[]>();
 		pointer_timestamps_wpm = 0;
 		noEnemies = true;
-		player = new Player(container.getWidth() / 2, container.getHeight(), Color.white);
-		this.enemies = new ArrayList<Enemy>();
+		player = new Player(container.getWidth() / 2, container.getHeight(), settings.getPlayerColor());
+		enemies = new ArrayList<Enemy>();
 		spawnEnemey();
 		passedEnemy = null;
 
@@ -252,6 +252,7 @@ public class TypingGame extends BasicGame {
 						} else {
 							if (key != 42) {
 								missSound.play(1, 0.1f);
+								player.getScore().sub(1);
 								player.incMissed();
 							}
 						}
@@ -270,22 +271,23 @@ public class TypingGame extends BasicGame {
 				} else {
 					if (key != 42) {
 						missSound.play(1, 0.1f);
+						player.getScore().sub(1);
 						player.incMissed();
 					}
 				}
 			}
-		} 
-//		else {
-//			if (key == 28) {
-//				try {
-//					endSound.stop();
-//					init(container);
-//					container.setPaused(false);
-//				} catch (SlickException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		} Warum funtioniert der kack nicht?
+		}
+		// else {
+		// if (key == 28) {
+		// try {
+		// endSound.stop();
+		// init(container);
+		// container.setPaused(false);
+		// } catch (SlickException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// } Warum funtioniert der kack nicht?
 		if (key == 1) {
 			container.exit();
 		}
