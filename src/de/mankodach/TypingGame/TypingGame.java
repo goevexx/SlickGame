@@ -63,11 +63,10 @@ public class TypingGame extends BasicGame {
 		container.setMaximumLogicUpdateInterval(5);
 
 		this.container = container;
-		
 		initializeSounds();
 		initializeLevels();
 		initializeParticleSystem();
-		
+
 		currentLevel = new IntAttribute("Level", 0);
 		levels[currentLevel.getInt()].getBackgroundSound().loop(1, 0.25f);
 
@@ -86,17 +85,11 @@ public class TypingGame extends BasicGame {
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		particleSystem.render();
-
 		player.draw(g);
-		player.getScore().draw(g, container.getWidth() - g.getFont().getWidth(player.getScore().createString()) - 5, 5);
-
-		String levelstring = currentLevel.createString(1);
-		g.drawString(levelstring, container.getWidth() - g.getFont().getWidth(levelstring) - 5,
-				g.getFont().getHeight(player.getScore().getName()) + 10);
-
-		String lifepointsString = player.getLifepoints().createString();
-		player.getLifepoints().draw(g, container.getWidth() - g.getFont().getWidth(lifepointsString) - 5,
-				container.getHeight() - g.getFont().getHeight(lifepointsString) - 5);
+		
+		drawScore(container, g);
+		drawLevel(container, g);
+		drawLifepoints(container, g);
 
 		if (!container.isPaused()) {
 			if (player.getShot() != null) {
@@ -123,32 +116,15 @@ public class TypingGame extends BasicGame {
 				}
 			}
 		} else {
-			float lostStrHeight = g.getFont().getHeight("You Lost");
-			float destroyedWordsStrHeight = g.getFont().getHeight(player.getDestroyedWords().createString());
-			float missedStrHeight = g.getFont().getHeight(player.getMissed().createString());
-			g.drawString("You Lost", container.getWidth() / 2 - g.getFont().getWidth("You Lost") / 2,
-					container.getHeight() / 2 - lostStrHeight / 2);
-			player.getDestroyedWords().draw(g,
-					container.getWidth() / 2 - g.getFont().getWidth(player.getDestroyedWords().createString()) / 2,
-					container.getHeight() / 2 + lostStrHeight + 5);
-			player.getMissed().draw(g,
-					container.getWidth() / 2 - g.getFont().getWidth(player.getMissed().createString()) / 2,
-					container.getHeight() / 2 + lostStrHeight + destroyedWordsStrHeight + 5);
-
-			player.getWpm().draw(g, container.getWidth() / 2 - g.getFont().getWidth(player.getWpm().createString()) / 2,
-					container.getHeight() / 2 + lostStrHeight + destroyedWordsStrHeight + missedStrHeight + 5);
+			showEndScreen(container, g);
 		}
 	}
-
+	
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		particleSystem.update(delta);
 		if (container.isPaused()) {
-			backgroundSound0.stop();
-			backgroundSound1.stop();
-			backgroundSound2.stop();
-			backgroundSound3.stop();
-			endSound.loop(1, 0.02f);
+			handleSounds();
 		} else {
 			if (player.getLifepoints().getInt() == 0) {
 				container.setPaused(true);
@@ -339,5 +315,50 @@ public class TypingGame extends BasicGame {
 			System.out.println("Error adding explosion\nCheck for explosion.xml");
 			System.exit(0);
 		}
+	}
+	
+	private void showEndScreen(GameContainer container, Graphics g) {
+		float lostStrHeight = g.getFont().getHeight("You Lost");
+		float destroyedWordsStrHeight = g.getFont().getHeight(player.getDestroyedWords().createString());
+		float missedStrHeight = g.getFont().getHeight(player.getMissed().createString());
+		
+		float halfContainerHeight = container.getHeight() / 2;
+		float halfContainerWidth = container.getWidth() / 2;
+		
+		g.drawString("You Lost", halfContainerWidth - g.getFont().getWidth("You Lost") / 2,
+				halfContainerHeight - lostStrHeight / 2);
+		
+		player.getDestroyedWords().draw(g,
+				halfContainerWidth - g.getFont().getWidth(player.getDestroyedWords().createString()) / 2,
+				halfContainerHeight + lostStrHeight + 5);
+		player.getMissed().draw(g,
+				halfContainerWidth - g.getFont().getWidth(player.getMissed().createString()) / 2,
+				halfContainerHeight + lostStrHeight + destroyedWordsStrHeight + 5);
+		player.getWpm().draw(g, halfContainerWidth - g.getFont().getWidth(player.getWpm().createString()) / 2,
+				halfContainerHeight + lostStrHeight + destroyedWordsStrHeight + missedStrHeight + 5);
+	}
+	
+	private void drawLevel(GameContainer container, Graphics g) {
+		String levelstring = currentLevel.createString(1);
+		g.drawString(levelstring, container.getWidth() - g.getFont().getWidth(levelstring) - 5,
+				g.getFont().getHeight(player.getScore().getName()) + 10);
+	}
+
+	private void drawLifepoints(GameContainer container, Graphics g) {
+		String lifepointsString = player.getLifepoints().createString();
+		player.getLifepoints().draw(g, container.getWidth() - g.getFont().getWidth(lifepointsString) - 5,
+				container.getHeight() - g.getFont().getHeight(lifepointsString) - 5);
+	}
+	
+	private void drawScore(GameContainer container, Graphics g) {
+		player.getScore().draw(g, container.getWidth() - g.getFont().getWidth(player.getScore().createString()) - 5, 5);
+	}
+	
+	private void handleSounds() {
+		backgroundSound0.stop();
+		backgroundSound1.stop();
+		backgroundSound2.stop();
+		backgroundSound3.stop();
+		endSound.loop(1, 0.02f);
 	}
 }
