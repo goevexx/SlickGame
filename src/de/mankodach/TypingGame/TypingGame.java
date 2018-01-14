@@ -63,42 +63,24 @@ public class TypingGame extends BasicGame {
 		container.setMaximumLogicUpdateInterval(5);
 
 		this.container = container;
+		
+		initializeSounds();
+		initializeLevels();
+		initializeParticleSystem();
+		
 		currentLevel = new IntAttribute("Level", 0);
-		backgroundSound0 = new BackgroundSound("bg0", "res/backgroundSound0.ogg");
-		backgroundSound1 = new BackgroundSound("bg1", "res/backgroundSound1.ogg");
-		backgroundSound2 = new BackgroundSound("bg2", "res/backgroundSound2.ogg");
-		backgroundSound3 = new BackgroundSound("bg3", "res/backgroundSound3.ogg");
-		levels = new Level[] { new Level(backgroundSound0, 1, 25), new Level(backgroundSound0, 0.75f, 250),
-				new Level(backgroundSound1, 0.675f, 700), new Level(backgroundSound1, 0.6f, 1500),
-				new Level(backgroundSound2, 0.55f, 3000), new Level(backgroundSound2, 0.5f, 6000),
-				new Level(backgroundSound3, 0.45f, 12000), new Level(backgroundSound3, 0.4f, Integer.MAX_VALUE), };
 		levels[currentLevel.getInt()].getBackgroundSound().loop(1, 0.25f);
-		endSound = new Sound("res/ending.wav");
-		missSound = new Sound("res/miss.wav");
-		destroyEnemySound = new Sound("res/destroyEnemy.wav");
-		clearActiveSound = new Sound("res/clearActive.wav");
+
 		timestamp_spawn = new Date();
 		timestamp_move = new Date();
 		timestamps_wpm = new ArrayList<Date[]>();
 		pointer_timestamps_wpm = 0;
 		noEnemies = true;
+		
 		player = new Player(container.getWidth() / 2, container.getHeight(), settings.getPlayerColor());
 		enemies = new ArrayList<Enemy>();
-		spawnEnemey();
+		spawnEnemy();
 		passedEnemy = null;
-
-		try {
-			particleSystem = ParticleIO.loadConfiguredSystem("res/explosion.xml");
-			particleSystem.getEmitter(0).setEnabled(false);
-			particleSystem.setRemoveCompletedEmitters(true);
-
-			explosion = (ConfigurableEmitter) particleSystem.getEmitter(0);
-			explosion.setEnabled(false);
-		} catch (Exception e) {
-			System.out.println("Error adding explosion\nCheck for explosion.xml");
-			System.exit(0);
-		}
-
 	}
 
 	@Override
@@ -106,7 +88,6 @@ public class TypingGame extends BasicGame {
 		particleSystem.render();
 
 		player.draw(g);
-
 		player.getScore().draw(g, container.getWidth() - g.getFont().getWidth(player.getScore().createString()) - 5, 5);
 
 		String levelstring = currentLevel.createString(1);
@@ -198,7 +179,7 @@ public class TypingGame extends BasicGame {
 
 			if ((new Date().getTime() - timestamp_spawn.getTime()) >= 3650
 					* levels[currentLevel.getInt()].getDifficulty()) {
-				spawnEnemey();
+				spawnEnemy();
 				timestamp_spawn = new Date();
 			}
 
@@ -299,7 +280,7 @@ public class TypingGame extends BasicGame {
 		enemies.remove(e);
 	}
 
-	public void spawnEnemey() {
+	public void spawnEnemy() {
 		String enemyWord = words.get(random.nextInt(settings.getWords().size()));
 		enemies.add(new Enemy(container.getGraphics(),
 				random.nextInt(container.getWidth() - Word.calWidth(this.container.getGraphics(), enemyWord)), 0,
@@ -312,5 +293,51 @@ public class TypingGame extends BasicGame {
 		e.setEnabled(true);
 		e.setPosition(x, y);
 		particleSystem.addEmitter(e);
+	}
+
+	private void initializeSounds() {
+		final String resourceBackgroundSound0 = "res/backgroundSound0.ogg";
+		final String resourceBackgroundSound1 = "res/backgroundSound1.ogg";
+		final String resourceBackgroundSound2 = "res/backgroundSound2.ogg";
+		final String resourceBackgroundSound3 = "res/backgroundSound3.ogg";
+		final String resourceEndSound = "res/ending.wav";
+		final String resourceMissSound = "res/miss.wav";
+		final String resourceDestroyEnemySound = "res/destroyEnemy.wav";
+		final String resourceClearActive = "res/clearActive.wav";
+
+		try {
+			backgroundSound0 = new BackgroundSound("bg0", resourceBackgroundSound0);
+			backgroundSound1 = new BackgroundSound("bg1", resourceBackgroundSound1);
+			backgroundSound2 = new BackgroundSound("bg2", resourceBackgroundSound2);
+			backgroundSound3 = new BackgroundSound("bg3", resourceBackgroundSound3);
+
+			endSound = new Sound(resourceEndSound);
+			missSound = new Sound(resourceMissSound);
+			destroyEnemySound = new Sound(resourceDestroyEnemySound);
+			clearActiveSound = new Sound(resourceClearActive);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void initializeLevels() {
+		levels = new Level[] { new Level(backgroundSound0, 1, 25), new Level(backgroundSound0, 0.75f, 250),
+				new Level(backgroundSound1, 0.675f, 700), new Level(backgroundSound1, 0.6f, 1500),
+				new Level(backgroundSound2, 0.55f, 3000), new Level(backgroundSound2, 0.5f, 6000),
+				new Level(backgroundSound3, 0.45f, 12000), new Level(backgroundSound3, 0.4f, Integer.MAX_VALUE), };
+	}
+	
+	private void initializeParticleSystem() {
+		try {
+			particleSystem = ParticleIO.loadConfiguredSystem("res/explosion.xml");
+			particleSystem.getEmitter(0).setEnabled(false);
+			particleSystem.setRemoveCompletedEmitters(true);
+
+			explosion = (ConfigurableEmitter) particleSystem.getEmitter(0);
+			explosion.setEnabled(false);
+		} catch (Exception e) {
+			System.out.println("Error adding explosion\nCheck for explosion.xml");
+			System.exit(0);
+		}
 	}
 }
