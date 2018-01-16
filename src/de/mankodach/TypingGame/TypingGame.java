@@ -85,8 +85,6 @@ public class TypingGame extends BasicGame {
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		particleSystem.render();
-		player.draw(g);
-		
 		drawScore(container, g);
 		drawLevel(container, g);
 		drawLifepoints(container, g);
@@ -118,6 +116,8 @@ public class TypingGame extends BasicGame {
 		} else {
 			showEndScreen(container, g);
 		}
+		
+		player.draw(g);
 	}
 	
 	@Override
@@ -218,8 +218,8 @@ public class TypingGame extends BasicGame {
 						int scoreAdd = activeWord.getName().length() * (currentLevel.getInt() + 1);
 						player.getScore().add(scoreAdd);
 
-						float x = activeEnemy.getX();
-						float y = activeEnemy.getY();
+						float x = activeEnemy.getX() + activeEnemy.getWidth() / 2;
+						float y = activeEnemy.getY() + activeEnemy.getHeight() / 2;
 						destroyEnemy(activeEnemy);
 						player.incDestroyedEnemies();
 						destroyEnemySound.play(0.95f, 0.2f);

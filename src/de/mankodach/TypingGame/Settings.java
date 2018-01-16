@@ -312,8 +312,8 @@ public class Settings {
 			"wooden", "word", "work", "worker", "working", "works", "workshop", "world", "worried", "worry", "worth",
 			"would", "wound", "wrap", "write", "writer", "writing", "wrong", "yard", "yeah", "year", "yell", "yellow",
 			"yes", "yesterday", "yet", "yield", "you", "young", "your", "yours", "yourself", "youth", "zone" };
-	private final Color standardEnemyColor = Color.white;
-	private final Color standardPlayerColor = Color.white;
+	private final Color standardEnemyColor = new Color(255, 255, 153);
+	private final Color standardPlayerColor = new Color(0, 204, 0);
 	private final Color standardShotColor = Color.cyan;
 	private final String jsonFileName = "typingGame.json";
 
